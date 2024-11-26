@@ -19,3 +19,77 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.services-bg {
+  background: linear-gradient(135deg, #1CBE93 0%, #2F959C 29%, #5F2DB3 94%, #602DB4 95%);
+  position: relative;
+  overflow: hidden;
+}
+
+.services-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.services-bg-img {
+  position: relative;
+  z-index: 1;
+}
+
+.img-bg-g {
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.img-bg-g:hover {
+  transform: scale(1.1);
+}
+
+.wow {
+  visibility: hidden;
+}
+
+.bounceInUp {
+  animation-name: bounceInUp;
+  animation-duration: 1.4s;
+  animation-fill-mode: both;
+  visibility: visible;
+}
+
+@keyframes bounceInUp {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3000px, 0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  75% {
+    transform: translate3d(0, 10px, 0);
+  }
+
+  90% {
+    transform: translate3d(0, -5px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -1,101 +1,224 @@
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/components/search-bar";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-[aliceblue] pt-40 pb-20 px-8">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h1 className="text-4xl lg:text-5xl font-bold text-[#27295b]">
+                Toute l'information financière et légale au bout des doigts…
+              </h1>
+              <p className="text-lg text-gray-600">
+                Collectez gratuitement toutes les informations nécessaires sur les
+                sociétés de votre choix (statuts, PV d'assemblée générale, comptes sociaux, 
+                dirigeants ..). Affinez votre analyse avec notre moteur de recherche avancé.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/images/home_new.svg"
+                alt="Business Illustration"
+                width={500}
+                height={400}
+                priority
+                className="w-full max-w-[12rem]"
+              />
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Search Section */}
+      <div className="container mx-auto px-4 -mt-8">
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
+          <SearchBar />
+        </div>
+      </div>
+
+      {/* Trust Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-[#27295b]">
+                Plus de mille utilisateurs nous font <span className="underline">confiance!</span>
+              </h2>
+            </div>
+            <div className="space-y-8">
+              <Image
+                src="/images/cmb-references-1.svg"
+                alt="References 1"
+                width={400}
+                height={100}
+                className="w-full"
+              />
+              <Image
+                src="/images/cmb-references-2.svg"
+                alt="References 2"
+                width={400}
+                height={100}
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gray-50" id="services">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="flex justify-center">
+              <Image
+                src="/images/svg/main-left.svg"
+                alt="Surveillance Feature"
+                width={400}
+                height={400}
+                className="w-full max-w-[12rem]"
+              />
+            </div>
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-[#27295b]">
+                Surveiller des entreprises gratuitement
+              </h2>
+              <p className="text-lg text-gray-600">
+                Contrôle MaBoite vous permet de surveiller des établissements gratuitement 
+                en utilisant les différents connecteurs. Ils vous permettent de recevoir 
+                des alertes par email à chaque fois qu'une information importante est publiée.
+              </p>
+              <Button className="bg-[#54cead] hover:bg-[#54cead]/90 px-[30px]">
+                Commencer la surveillance
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Region Section */}
+      <section className="services-bg py-16" id="region">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">
+          Annuaire des sociétés dans les régions de France
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {[
+              { name: "Île-de-France", count: "245,678" },
+              { name: "Auvergne-Rhône-Alpes", count: "185,432" },
+              { name: "Provence-Alpes-Côte d'Azur", count: "156,789" },
+              { name: "Occitanie", count: "134,567" },
+              { name: "Nouvelle-Aquitaine", count: "123,456" },
+              { name: "Hauts-de-France", count: "112,345" },
+            ].map((region, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              >
+                <h3 className="text-xl font-semibold text-[#27295b] mb-2">
+                  {region.name}
+                </h3>
+                <p className="text-gray-600">
+                  {region.count} entreprises
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Companies Section */}
+      <section className="bg-white p-8 sm:p-16 mb-10">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-[#27295b] mb-8 text-center">
+          Annuaire des sociétés dans les département de France
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {[
+              { name: "Apple France", sector: "Technologie", city: "Paris" },
+              { name: "Total Energies", sector: "Énergie", city: "Courbevoie" },
+              { name: "L'Oréal", sector: "Cosmétiques", city: "Clichy" },
+              { name: "Airbus", sector: "Aéronautique", city: "Toulouse" },
+              { name: "BNP Paribas", sector: "Banque", city: "Paris" },
+              { name: "Carrefour", sector: "Distribution", city: "Massy" },
+            ].map((company, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              >
+                <h3 className="text-xl font-semibold text-[#27295b] mb-2">
+                  {company.name}
+                </h3>
+                <p className="text-gray-600 mb-1">
+                  Secteur: {company.sector}
+                </p>
+                <p className="text-gray-600">
+                  Ville: {company.city}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Technologies Section */}
+      <section className="services-bg" id="newDiv">
+        <div className="services-bg-img">
+          <div className="container mx-auto px-4 py-16">
+            <header className="section-header mb-12">
+              <h3 className="text-3xl font-bold text-white text-center">Nos technologies</h3>
+            </header>
+
+            <div className="space-y-12">
+              {[
+                {
+                  icon: "/images/svg/icon5.svg",
+                  title: "Web crawling",
+                  description: "Nous avons développé des algorithmes capables d'explorer des centaines de milliers de pages web en peu de temps pour en extraire les données dont nous avons besoin. Nous parcourons les informations publiées par les entreprises et l'open data relative à leurs activités pour collecter les données qui seront par la suite explorées pour créer des profils complets."
+                },
+                {
+                  icon: "/images/svg/icon6.svg",
+                  title: "Matching",
+                  description: "Pour créer des profils beaucoup plus complets, nous agrégeons des données de provenance de centaines de sources et les attacherons au profil de la société. Cette technique nous permet de rechercher toutes les informations disponibles sur une société et les rassembler dans un seul lieu. Le matching nous permet de vous proposer des informations sûres et complètes."
+                },
+                {
+                  icon: "/images/svg/icon7.svg",
+                  title: "Data mining",
+                  description: "Nous implémentons les technologies de data mining qui nous permettent d'analyser les données collectées selon de nombreuses perspectives pour en tirer les informations utiles. Cette exploration des données est réalisée par nos algorithmes à la pointe de la technologie qui nous permettent de vous proposer des informations pertinentes et exactes sur les entreprises."
+                },
+                {
+                  icon: "/images/svg/icon8.svg",
+                  title: "Machine learning",
+                  description: "Nous déployons des technologies d'intelligence artificielle permettant à nos algorithmes d'évoluer grâce au machine learning. Ces technologies nous permettent de vous proposer des informations beaucoup plus pertinentes et de prendre de l'avance sur nos concurrents. Contrôle Maboite utilise des technologies de pointe pour vous proposer les meilleures prestations."
+                }
+              ].map((tech, index) => (
+                <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center wow bounceInUp">
+                  <div className="md:col-span-4 flex justify-center">
+                    <Image
+                      src={tech.icon}
+                      alt={tech.title}
+                      width={100}
+                      height={100}
+                      className="img-fluid img-bg-g"
+                    />
+                  </div>
+                  <div className="md:col-span-8">
+                    <h5 className="text-xl font-bold text-white mb-4">
+                      <a href="#" className="hover:text-gray-200">{tech.title}</a>
+                    </h5>
+                    <p className="text-white/90 text-justify">
+                      {tech.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
