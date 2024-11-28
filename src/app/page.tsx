@@ -1,8 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
+import { getHomeData } from '@/lib/api/regions';
+import { HomeData } from '@/lib/types/region';
 
-export default function Home() {
+export default async function Home() {
+  const data: HomeData = await getHomeData();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -215,6 +219,68 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* New Section */}
+      <section className="pt-40 pb-20 px-8">
+        <div className="container mx-auto">
+          <div className="bg-aliceblue rounded-lg shadow-sm">
+            <div className="max-w-7xl mx-auto py-16 px-8">
+              <h1 className="text-4xl font-bold text-[#27295b] mb-8">
+                Annuaire des Régions et Départements
+              </h1>
+
+              {/* Regions Section */}
+              <div className="mb-12">
+                <h2 className="text-2xl font-semibold text-[#27295b] mb-6">
+                  Régions
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {data.region.map((region) => (
+                    <a
+                      key={region.code}
+                      href={`/annuaires-entreprises/${region.slug}`}
+                      className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <h3 className="font-medium text-[#27295b]">
+                        {region.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Code: {region.code}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Departments Section */}
+              <div>
+                <h2 className="text-2xl font-semibold text-[#27295b] mb-6">
+                  Départements
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {data.departementR.map((dept) => (
+                    <a
+                      key={dept.code}
+                      href={`/annuaires-entreprises/${dept.region_slug}/${dept.dpt_slug}`}
+                      className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <h3 className="font-medium text-[#27295b]">
+                        {dept.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Code: {dept.code}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Région: {dept.region}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
