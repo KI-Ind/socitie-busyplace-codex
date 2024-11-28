@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/societebusyplace';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://dev_socitie_usr:12345678socitie123@10.8.0.52:27017/dev_socitie?authSource=dev_socitie';
 
 if (!MONGODB_URI) {
   throw new Error(
@@ -8,35 +8,29 @@ if (!MONGODB_URI) {
   );
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+declare global {
+  var mongoose: any; // This is a global type declaration
 }
 
-async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
-  }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
-
-  return cached.conn;
+interface Connection {
+  isConnected?: number;
 }
 
-export default connectDB;
+const connection: Connection = {};
+
+async function dbConnect() {
+  if (connection.isConnected) {
+    return;
+  }
+
+  const opts = {
+    bufferCommands: true,
+    autoIndex: true,
+    maxPoolSize: 10,
+  };
+
+  const db = await mongoose.connect(MONGODB_URI, opts);
+  connection.isConnected = db.connections[0].readyState;
+}
+
+export default dbConnect;
