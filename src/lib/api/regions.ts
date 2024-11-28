@@ -43,11 +43,14 @@ export async function getHomeData(): Promise<HomeData> {
     ]);
 
     return {
-      region: regions,
-      departementR: departments
+      regions,
+      departments
     };
   } catch (error) {
     console.error('Error fetching home data:', error);
-    throw new Error('Failed to fetch home data');
+    return {
+      regions: [],
+      departments: []
+    };
   }
 }

@@ -5,7 +5,30 @@ import { getHomeData } from '@/lib/api/regions';
 import { HomeData } from '@/lib/types/region';
 
 export default async function Home() {
-  const data: HomeData = await getHomeData();
+  let regions = [];
+  let departments = [];
+  try {
+    const data: HomeData = await getHomeData();
+    regions = data.regions.length > 0 ? data.regions : [
+      { name: "Île-de-France", count: "245,678" },
+      { name: "Auvergne-Rhône-Alpes", count: "185,432" },
+      { name: "Provence-Alpes-Côte d'Azur", count: "156,789" },
+      { name: "Occitanie", count: "134,567" },
+      { name: "Nouvelle-Aquitaine", count: "123,456" },
+      { name: "Hauts-de-France", count: "112,345" },
+    ];
+    departments = data.departments || [];
+  } catch (error) {
+    console.error('Error loading home data:', error);
+    regions = [
+      { name: "Île-de-France", count: "245,678" },
+      { name: "Auvergne-Rhône-Alpes", count: "185,432" },
+      { name: "Provence-Alpes-Côte d'Azur", count: "156,789" },
+      { name: "Occitanie", count: "134,567" },
+      { name: "Nouvelle-Aquitaine", count: "123,456" },
+      { name: "Hauts-de-France", count: "112,345" },
+    ];
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -110,14 +133,7 @@ export default async function Home() {
           Annuaire des sociétés dans les régions de France
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {[
-              { name: "Île-de-France", count: "245,678" },
-              { name: "Auvergne-Rhône-Alpes", count: "185,432" },
-              { name: "Provence-Alpes-Côte d'Azur", count: "156,789" },
-              { name: "Occitanie", count: "134,567" },
-              { name: "Nouvelle-Aquitaine", count: "123,456" },
-              { name: "Hauts-de-France", count: "112,345" },
-            ].map((region, index) => (
+            {regions.map((region, index) => (
               <div
                 key={index}
                 className="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
@@ -126,7 +142,7 @@ export default async function Home() {
                   {region.name}
                 </h3>
                 <p className="text-gray-600">
-                  {region.count} entreprises
+                  {region.count || (region.companiesCount?.toLocaleString('fr-FR') || '0')} entreprises
                 </p>
               </div>
             ))}
@@ -140,27 +156,20 @@ export default async function Home() {
           <h2 className="text-3xl font-bold text-[#27295b] mb-8 text-center">
           Annuaire des sociétés dans les département de France
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {[
-              { name: "Apple France", sector: "Technologie", city: "Paris" },
-              { name: "Total Energies", sector: "Énergie", city: "Courbevoie" },
-              { name: "L'Oréal", sector: "Cosmétiques", city: "Clichy" },
-              { name: "Airbus", sector: "Aéronautique", city: "Toulouse" },
-              { name: "BNP Paribas", sector: "Banque", city: "Paris" },
-              { name: "Carrefour", sector: "Distribution", city: "Massy" },
-            ].map((company, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            {departments.map((department) => (
               <div
-                key={index}
+                key={department.code}
                 className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
               >
                 <h3 className="text-xl font-semibold text-[#27295b] mb-2">
-                  {company.name}
+                  {department.name}
                 </h3>
                 <p className="text-gray-600 mb-1">
-                  Secteur: {company.sector}
+                  Code: {department.code}
                 </p>
                 <p className="text-gray-600">
-                  Ville: {company.city}
+                  Région: {department.region}
                 </p>
               </div>
             ))}
@@ -219,68 +228,6 @@ export default async function Home() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* New Section */}
-      <section className="pt-40 pb-20 px-8">
-        <div className="container mx-auto">
-          <div className="bg-aliceblue rounded-lg shadow-sm">
-            <div className="max-w-7xl mx-auto py-16 px-8">
-              <h1 className="text-4xl font-bold text-[#27295b] mb-8">
-                Annuaire des Régions et Départements
-              </h1>
-
-              {/* Regions Section */}
-              <div className="mb-12">
-                <h2 className="text-2xl font-semibold text-[#27295b] mb-6">
-                  Régions
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {data.region.map((region) => (
-                    <a
-                      key={region.code}
-                      href={`/annuaires-entreprises/${region.slug}`}
-                      className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <h3 className="font-medium text-[#27295b]">
-                        {region.name}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        Code: {region.code}
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Departments Section */}
-              <div>
-                <h2 className="text-2xl font-semibold text-[#27295b] mb-6">
-                  Départements
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {data.departementR.map((dept) => (
-                    <a
-                      key={dept.code}
-                      href={`/annuaires-entreprises/${dept.region_slug}/${dept.dpt_slug}`}
-                      className="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <h3 className="font-medium text-[#27295b]">
-                        {dept.name}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        Code: {dept.code}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Région: {dept.region}
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>

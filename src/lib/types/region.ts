@@ -16,6 +16,6 @@ export interface Department {
 }
 
 export interface HomeData {
-  region: Region[];
-  departementR: Department[];
+  regions: Region[];
+  departments: Department[];
 }
