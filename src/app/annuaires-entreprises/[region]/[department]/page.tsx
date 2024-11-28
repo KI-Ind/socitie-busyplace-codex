@@ -5,9 +5,13 @@ interface PageProps {
     region: string;
     department: string;
   };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default function DepartmentPage({ params }: PageProps) {
+export default async function DepartmentPage({
+  params,
+  searchParams,
+}: PageProps) {
   const department = "Paris"; // This would come from the API based on params.department
   
   const dummyCities = [
