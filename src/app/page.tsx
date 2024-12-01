@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
+import { AnimatedCard } from "@/components/animated-card";
 import { getHomeData } from '@/lib/api/regions';
 import { HomeData } from '@/lib/types/region';
 
@@ -130,21 +131,17 @@ export default async function Home() {
       <section className="services-bg py-16" id="region">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
-          Annuaire des sociétés dans les régions de France
+            Annuaire des sociétés dans les régions de France
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {regions.map((region, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <h3 className="text-xl font-semibold text-[#27295b] mb-2">
-                  {region.name}
-                </h3>
-                <p className="text-gray-600">
-                  {region.count || (region.companiesCount?.toLocaleString('fr-FR') || '0')} entreprises
-                </p>
-              </div>
+              <AnimatedCard
+                key={region.name}
+                index={index}
+                title={region.name}
+                subtitle={`${region.count || (region.companiesCount?.toLocaleString('fr-FR') || '0')} entreprises`}
+                href={`/annuaires-entreprises/${region.slug || region.name.toLowerCase().replace(/ /g, '-')}`}
+              />
             ))}
           </div>
         </div>
@@ -154,24 +151,18 @@ export default async function Home() {
       <section className="bg-white p-8 sm:p-16 mb-10">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-[#27295b] mb-8 text-center">
-          Annuaire des sociétés dans les département de France
+            Annuaire des sociétés dans les département de France
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            {departments.map((department) => (
-              <div
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {departments.map((department, index) => (
+              <AnimatedCard
                 key={department.code}
-                className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <h3 className="text-xl font-semibold text-[#27295b] mb-2">
-                  {department.name}
-                </h3>
-                <p className="text-gray-600 mb-1">
-                  Code: {department.code}
-                </p>
-                <p className="text-gray-600">
-                  Région: {department.region}
-                </p>
-              </div>
+                index={index}
+                title={department.name}
+                code={department.code}
+                subtitle={`${department.companiesCount?.toLocaleString('fr-FR') || '0'} entreprises`}
+                href={`/annuaires-entreprises/${department.region_slug || 'region'}/${department.dpt_slug || department.code}`}
+              />
             ))}
           </div>
         </div>
