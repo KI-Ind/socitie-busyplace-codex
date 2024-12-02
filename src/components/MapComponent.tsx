@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface MapComponentProps {
   address: {
@@ -75,7 +76,7 @@ const MapComponent = ({ address }: MapComponentProps) => {
     };
   }, [address]);
 
-  return <div ref={mapContainer} className="w-full h-full min-h-[400px] rounded-lg" />;
+  return <div ref={mapContainer} className="w-full h-full" />;
 };
 
 export default MapComponent;
