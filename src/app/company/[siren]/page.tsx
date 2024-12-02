@@ -94,5 +94,11 @@ export default async function CompanyDetailsPage({ params }: CompanyDetailsProps
   const { siren } = params;
   const data = await getCompanyData(siren);
   
-  return <CompanyDetailsClient data={data} siren={siren} />;
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="pt-32 md:pt-36 px-8 md:px-16 lg:px-24 xl:px-32 pb-12">
+        <CompanyDetailsClient data={data} siren={siren} />
+      </div>
+    </div>
+  );
 }

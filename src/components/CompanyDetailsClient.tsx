@@ -208,7 +208,7 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
       <Script src="https://code.highcharts.com/modules/export-data.js" />
       <Script src="https://code.highcharts.com/modules/accessibility.js" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <nav className="text-sm mb-8">
           <ol className="list-none p-0 inline-flex">
