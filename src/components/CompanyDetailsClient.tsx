@@ -2,11 +2,14 @@
 
 import { CompanyData } from '@/types/company';
 import { formatSIREN, formatSIRET, calculateTVA, getEffectifLabel } from '@/utils/company';
+import { getLegalFormLabel } from '@/utils/legal-forms';
+import { getNafActivityLabel } from '@/utils/naf-codes';
 import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef } from 'react';
+import '@/styles/company-details.css';
 
 const MapComponent = dynamic(() => import('./MapComponent'), {
   loading: () => <div className="w-full h-[400px] bg-gray-100 animate-pulse rounded-lg" />
@@ -123,13 +126,41 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
         .catch(console.error);
     };
 
+    const getRepresentativesData = async () => {
+      try {
+        const response = await fetch(`/api/company/representatives/${siren}`);
+        const data = await response.json();
+        
+        if (data.error) {
+          console.error('Error fetching representatives data:', data.error);
+          return;
+        }
+
+        // Update the tables with the fetched data
+        const table1 = document.getElementById('mytable1');
+        const table2 = document.getElementById('mytbl2');
+        const socialCapitalElement = document.getElementById('social_capital');
+        const activityElement = document.getElementById('activitepricipale');
+        
+        if (table1) table1.innerHTML = data.viewtbl1;
+        if (table2) table2.innerHTML = data.viewtbl2;
+        if (socialCapitalElement) socialCapitalElement.innerHTML = data.social_capital;
+        if (activityElement) activityElement.innerHTML = data.activitepricipale;
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
     getRegistreData();
     registreentredataattachments();
     bodacdata();
+    getRepresentativesData();
   }, [siren]);
 
   return (
     <>
+      <Script src="https://kit.fontawesome.com/yourcode.js" />
       <Script src="https://code.highcharts.com/highcharts.js" />
       <Script src="https://code.highcharts.com/modules/series-label.js" />
       <Script src="https://code.highcharts.com/modules/exporting.js" />
@@ -184,44 +215,204 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
         </div>
 
         {/* Legal Information */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 pb-4 border-b border-gray-200 mb-6">
-            Informations légales de : {uniteLegale.denominationUniteLegale}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <dl>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">N° SIREN :</dt>
-                  <dd className="col-span-2 font-medium">{formattedSiren}</dd>
-                </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">N° SIRET :</dt>
-                  <dd className="col-span-2 font-medium">{formattedSiret}</dd>
-                </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">N° TVA Intracommunautaire :</dt>
-                  <dd className="col-span-2 font-medium">{tvaNumber}</dd>
-                </div>
-              </dl>
+        <div className="detial-contnt th-box mt-5">
+          <h4 className="font-weight-bold th-color m-0 th-border-b">
+            <span>Informations légales de :</span>
+            <span> {uniteLegale.denominationUniteLegale}</span>
+          </h4>
+          <div className="pt-5 pb-5">
+            <div className="table-responsive" style={{ padding: '50px' }}>
+              <table className="table table-n th-color mobi-table">
+                <tbody>
+                  <tr>
+                    <th className="th-color-grey" style={{ width: '35%' }}>N° SIREN :</th>
+                    <td>
+                      <span id="socity_sirencopy">{formattedSiren} &nbsp;&nbsp;</span>
+                      <span>
+                        <i 
+                          className="fa fa-clone cursor-pointer" 
+                          aria-hidden="true"
+                          onClick={() => {
+                            navigator.clipboard.writeText(siren);
+                            const tooltip = document.getElementById('socity_sirencopytool');
+                            if (tooltip) {
+                              tooltip.textContent = 'Copié !';
+                              setTimeout(() => { tooltip.textContent = ''; }, 2000);
+                            }
+                          }}
+                        />
+                        <span className="tooltiptext" id="socity_sirencopytool"></span>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">N° SIRET (siège) :</th>
+                    <td>
+                      <span id="socity_siretcopy">{formattedSiret} &nbsp;&nbsp;</span>
+                      <span>
+                        <i 
+                          className="fa fa-clone cursor-pointer" 
+                          aria-hidden="true"
+                          onClick={() => {
+                            navigator.clipboard.writeText(siret);
+                            const tooltip = document.getElementById('socity_siretcopytool');
+                            if (tooltip) {
+                              tooltip.textContent = 'Copié !';
+                              setTimeout(() => { tooltip.textContent = ''; }, 2000);
+                            }
+                          }}
+                        />
+                        <span className="tooltiptext" id="socity_siretcopytool"></span>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Adresse : </th>
+                    <td>
+                      {adresseEtablissement.numeroVoieEtablissement} {adresseEtablissement.typeVoieEtablissement}{' '}
+                      {adresseEtablissement.libelleVoieEtablissement} {adresseEtablissement.codePostalEtablissement}{' '}
+                      {adresseEtablissement.libelleCommuneEtablissement}, France
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Forme juridique :</th>
+                    <td>{getLegalFormLabel(uniteLegale.categorieJuridiqueUniteLegale)}</td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Activité (Code NAF ou APE) :</th>
+                    <td>
+                      {uniteLegale.activitePrincipaleUniteLegale} - {getNafActivityLabel(uniteLegale.activitePrincipaleUniteLegale)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Activité principale Etablissement :</th>
+                    <td id="activitepricipale">
+                      <div className="loading-container">
+                        <div className="loading-bar">
+                          <div className="progress-bar"></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">N° TVA UE :</th>
+                    <td>
+                      <span id="socity_tvacopy">{tvaNumber}</span>
+                      <span>
+                        <i 
+                          className="fa fa-clone cursor-pointer" 
+                          aria-hidden="true"
+                          onClick={() => {
+                            navigator.clipboard.writeText(tvaNumber);
+                            const tooltip = document.getElementById('socity_tvacopytool');
+                            if (tooltip) {
+                              tooltip.textContent = 'Copié !';
+                              setTimeout(() => { tooltip.textContent = ''; }, 2000);
+                            }
+                          }}
+                        />
+                        <span className="tooltiptext" id="socity_tvacopytool"></span>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Tranche d'effectif salariés :</th>
+                    <td>
+                      {getEffectifLabel(uniteLegale.trancheEffectifsUniteLegale)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Date d'immatriculation :</th>
+                    <td>{new Date(uniteLegale.dateCreationUniteLegale).toLocaleDateString('fr-FR')}</td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Capital social :</th>
+                    <td id="social_capital">
+                      <div className="loading-container">
+                        <div className="loading-bar">
+                          <div className="progress-bar"></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="th-color-grey">Inscription au RCS :</th>
+                    <td id="inscrit">
+                      INSCRIT <span><i className="fa fa-check-circle-o" aria-hidden="true" style={{ color: '#54cead' }}></i></span> Au greffe de
+                      <font id="regdatagreffe"></font>
+                      <font id="observationrcs"></font>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div>
-              <dl>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">Activité (Code NAF) :</dt>
-                  <dd className="col-span-2 font-medium">{uniteLegale.activitePrincipaleUniteLegale}</dd>
+            <div className="row">
+              <div className="text-center mt-2 col-md-3" id="mybtn"></div>
+              <div className="text-center mt-2 col-md-3" style={{ display: 'none' }} id="btn1">
+                <button 
+                  type="button" 
+                  className="btn btn-th font-weight-bold"
+                  onClick={() => window.open(`/download/${siren}`)}
+                >
+                  &nbsp;Télécharger Extrait busyplace <i className="fa fa-cloud-download" aria-hidden="true"></i>&nbsp;
+                </button>
+              </div>
+              <div className="text-center mt-2 col-md-3">
+                <button 
+                  type="button" 
+                  className="btn btn-th font-weight-bold"
+                  onClick={() => window.open(`https://api-avis-situation-sirene.insee.fr/identification/pdf/${siret}`)}
+                >
+                  &nbsp;Télécharger l'Avis de SIRENE <i className="fa fa-cloud-download" aria-hidden="true"></i>&nbsp;
+                </button>
+              </div>
+              <div className="text-center mt-2 col-md-3">
+                <button 
+                  type="button" 
+                  className="btn btn-th font-weight-bold" 
+                  id="inpidatadownload"
+                >
+                  &nbsp;Extrait d'immatriculation RCS <i className="fa fa-cloud-download" aria-hidden="true"></i>&nbsp;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Legal Representatives Section */}
+        <div className="detial-contnt th-box mt-5">
+          <div className="float-lg-lefts">
+            <h4 className="font-weight-bold th-color m-0 th-border-b">
+              <span>Mandataires légaux de : </span>
+              <span>{uniteLegale.denominationUniteLegale}</span>
+            </h4>
+          </div>
+
+          <div className="pt-5 pb-5">
+            <p className="dirige mt-4 th-color">DIRIGEANTS</p>
+            <div className="table-responsive" id="mytable1" style={{ padding: '50px', maxHeight: '500px' }}>
+              <div className="loading-container">
+                <div className="loading-bar">
+                  <div className="progress-bar"></div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">Forme juridique :</dt>
-                  <dd className="col-span-2 font-medium">{uniteLegale.categorieJuridiqueUniteLegale}</dd>
+              </div>
+            </div>
+          </div>
+
+          <div className="float-lg-left">
+            <h4 className="font-weight-bold th-color m-0 th-border-b">
+              <span>Actionnaires et bénéficiaires effectifs de :</span>
+              <span>{uniteLegale.denominationUniteLegale}</span>
+            </h4>
+          </div>
+
+          <div className="pt-5 pb-5">
+            <div className="table-responsive" id="mytbl2" style={{ padding: '50px', maxHeight: '500px' }}>
+              <div className="loading-container">
+                <div className="loading-bar">
+                  <div className="progress-bar"></div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-gray-600">Effectif :</dt>
-                  <dd className="col-span-2 font-medium">
-                    {getEffectifLabel(uniteLegale.trancheEffectifsUniteLegale)}
-                  </dd>
-                </div>
-              </dl>
+              </div>
             </div>
           </div>
         </div>
