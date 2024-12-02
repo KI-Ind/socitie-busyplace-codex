@@ -79,6 +79,12 @@ export function SearchBar() {
     }
   };
 
+  const handleResultClick = (result: any) => {
+    // Extract SIREN from the result
+    const siren = result.siren.replace(/\s/g, '').substring(0, 9);
+    router.push(`/company/${siren}`);
+  };
+
   // Clear timeout on unmount
   useEffect(() => {
     return () => {
@@ -118,10 +124,7 @@ export function SearchBar() {
               <li
                 key={index}
                 className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
-                onClick={() => {
-                  setQuery(result.label);
-                  setResults([]);
-                }}
+                onClick={() => handleResultClick(result)}
               >
                 <div className="flex justify-between items-center">
                   <span>{result.label}</span>
