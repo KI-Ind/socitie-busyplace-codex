@@ -94,11 +94,24 @@ export default async function CompanyDetailsPage({ params }: CompanyDetailsProps
   const { siren } = params;
   const data = await getCompanyData(siren);
   
+  if (!data) {
+    // notFound(); // This function is not defined in the provided code
+  }
+
+  const headquarters = data.etablissements?.find(e => e.etablissementSiege);
+  const companyName = headquarters?.uniteLegale.denominationUniteLegale;
+  const breadcrumbData = companyName ? generateBreadcrumbsFromPath(`/company/${siren}`, companyName) : [];
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="pt-32 md:pt-36 px-8 md:px-16 lg:px-24 xl:px-32 pb-12">
-        <CompanyDetailsClient data={data} siren={siren} />
+    <>
+      <JsonLd 
+        breadcrumbData={breadcrumbData}
+      />
+      <div className="min-h-screen bg-gray-100">
+        <div className="pt-32 md:pt-36 px-8 md:px-16 lg:px-24 xl:px-32 pb-12">
+          <CompanyDetailsClient data={data} siren={siren} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

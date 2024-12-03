@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer as LayoutFooter } from "@/components/layout/footer";
+import { JsonLd } from "@/components/json-ld";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://societebusyplace.fr'),
+  metadataBase: new URL('https://societe.busyplace.fr'),
   title: {
     default: "SocieteBusyplace - Annuaire des entreprises françaises",
     template: "%s | SocieteBusyplace"
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://societebusyplace.fr',
+    url: 'https://societe.busyplace.fr',
     siteName: 'SocieteBusyplace',
     title: 'SocieteBusyplace - Annuaire des entreprises françaises',
     description: 'Trouvez des informations détaillées sur les entreprises françaises, leurs dirigeants et suivez leurs actualités. Accédez gratuitement aux données financières et légales.',
@@ -81,21 +82,23 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://societebusyplace.fr',
+    canonical: 'https://societe.busyplace.fr',
     languages: {
-      'fr-FR': 'https://societebusyplace.fr',
+      'fr-FR': 'https://societe.busyplace.fr',
     },
   },
   verification: {
     google: 'your-google-site-verification', // Add your Google verification code
   },
+  manifest: '/manifest.json',
+  themeColor: '#1CBE93',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="fr" dir="ltr">
       <head>
@@ -109,9 +112,22 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
+        <JsonLd />
+        <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml" />
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.variable} font-sans min-h-screen flex flex-col`}>
         <Header />
