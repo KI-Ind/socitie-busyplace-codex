@@ -509,22 +509,7 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
           <div id="chartContainer" className="mt-8" style={{ minHeight: '400px' }} />
         </div>
 
-        {/* Financial Data Section */}
-        {attachmentsData?.my_years?.length > 0 && 
-         attachmentsData.data_revenue?.some(val => val !== null) && 
-         attachmentsData.data_income?.some(val => val !== null) && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div className="float-lg-left mb-4">
-              <h4 className="text-xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block">
-                <span>Données financières de : </span>
-                <span className="text-blue-600">{uniteLegale.denominationUniteLegale}</span>
-              </h4>
-            </div>
-            <div id="chartContainer" className="w-full h-96" />
-          </div>
-        )}
-
-        {/* BODAC Data Section */}
+        {/* BODACC Data Section */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="float-lg-left mb-4">
             <h4 className="text-xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block">
@@ -536,13 +521,7 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
           <div className="pt-5 pb-5">
             <div className="overflow-x-auto" style={{ maxHeight: '500px' }}>
               {isLoadingRegistre ? (
-                <div className="flex items-center justify-center p-4">
-                  <div className="loading-container">
-                    <div className="loading-bar">
-                      <div className="progress-bar"></div>
-                    </div>
-                  </div>
-                </div>
+                renderLoadingState()
               ) : bodacData?.records && bodacData.records.length > 0 ? (
                 <table className="min-w-full border-collapse">
                   <thead>
@@ -603,6 +582,21 @@ export default function CompanyDetailsClient({ data, siren }: CompanyDetailsClie
             </div>
           </div>
         </div>
+
+        {/* Financial Data Section */}
+        {attachmentsData?.my_years?.length > 0 && 
+         attachmentsData.data_revenue?.some(val => val !== null) && 
+         attachmentsData.data_income?.some(val => val !== null) && (
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div className="float-lg-left mb-4">
+              <h4 className="text-xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block">
+                <span>Données financières de : </span>
+                <span className="text-blue-600">{uniteLegale.denominationUniteLegale}</span>
+              </h4>
+            </div>
+            <div id="chartContainer" className="w-full h-96" />
+          </div>
+        )}
 
         {/* Secondary Establishments */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">

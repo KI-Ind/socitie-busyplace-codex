@@ -8,93 +8,104 @@ export function SearchBar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const router = useRouter();
   const searchTimeout = useRef<NodeJS.Timeout>();
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-    
-    router.push(`/search?q=${encodeURIComponent(query)}`);
-  };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    console.log('=== SEARCH BAR DEBUG ===');
-    console.log('1. Input changed:', value);
 
     // Clear previous timeout
     if (searchTimeout.current) {
       clearTimeout(searchTimeout.current);
     }
 
-    if (value.trim()) {
+    if (value.length > 2) { // Only search if more than 2 characters
       setIsLoading(true);
-      // Debounce the search
+      // Set a new timeout
       searchTimeout.current = setTimeout(async () => {
         try {
           const timestamp = Date.now();
-          const url = `/api/search/autocomplete?keyword=${encodeURIComponent(value)}&t=${timestamp}`;
-          console.log('2. Making API request to:', url);
-          const response = await fetch(url, {
-            // Add headers to prevent caching
+          const response = await fetch(`/api/search/autocomplete?keyword=${encodeURIComponent(value)}&t=${timestamp}`, {
             headers: {
               'Cache-Control': 'no-cache, no-store, must-revalidate',
               'Pragma': 'no-cache',
               'Expires': '0',
             }
           });
-          console.log('3. API response:', {
-            status: response.status,
-            statusText: response.statusText,
-            ok: response.ok,
-            headers: Object.fromEntries(response.headers)
-          });
           
           if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API request failed:', {
-              status: response.status,
-              statusText: response.statusText,
-              error: errorText
-            });
             throw new Error('Search request failed');
           }
-          
           const data = await response.json();
-          console.log('4. API response data:', data);
-          setResults(data);
+          setResults(Array.isArray(data) ? data : []);
         } catch (error) {
-          console.error('5. Error in search:', error);
+          console.error('Search error:', error);
           setResults([]);
         } finally {
           setIsLoading(false);
-          console.log('6. Search completed');
         }
-      }, 300); // Wait 300ms after user stops typing
+      }, 300); // Debounce time of 300ms
     } else {
       setResults([]);
       setIsLoading(false);
     }
   };
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.length < 3) return; // Only search if more than 2 characters
+
+    setIsLoading(true);
+    try {
+      const timestamp = Date.now();
+      const response = await fetch(`/api/search/autocomplete?keyword=${encodeURIComponent(query)}&t=${timestamp}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Search request failed');
+      }
+      const data = await response.json();
+      setResults(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Search error:', error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleResultClick = (result: any) => {
-    // Extract SIREN from the result
-    const siren = result.siren.replace(/\s/g, '').substring(0, 9);
-    
-    // Get company name from the label and format it for URL
     const companyName = result.label
-      .split('-')[0] // Get the part before first dash
-      .trim()
+      .split(' ')[0] // Take only the first word of the company name
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/[^a-z0-9]+/g, '-') // Replace special characters with hyphens
       .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
     
+    // Extract only the first 9 digits (SIREN) from the number
+    const siren = result.siren.toString().substring(0, 9);
+    
     router.push(`/${companyName}/${siren}`);
+    setShowResults(false);
   };
+
+  // Close results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!(e.target as Element).closest('form')) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   // Clear timeout on unmount
   useEffect(() => {
@@ -107,47 +118,59 @@ export function SearchBar() {
 
   return (
     <form onSubmit={handleSearch} className="relative">
-      <div className="relative">
+      <div className="relative shadow-lg rounded-lg">
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
-          className="w-full h-14 pl-4 pr-12 text-lg rounded-lg border border-gray-200 focus:outline-none focus:border-[#54cead] focus:ring-1 focus:ring-[#54cead]"
-          placeholder="Nom d'entreprise, n° de SIREN…"
+          onFocus={() => setShowResults(true)}
+          placeholder="Nom d'entreprise, n° de SIREN..."
+          className="w-full p-4 pl-4 bg-white rounded-lg focus:outline-none text-gray-600 placeholder-gray-300"
         />
         <button
           type="submit"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#54cead]"
+          className="absolute right-0 top-0 h-full px-6 bg-[#1CBE93] hover:bg-[#1CBE93]/90 text-white rounded-r-lg"
+          aria-label="Search"
         >
           {isLoading ? (
-            <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-[#54cead]" />
+            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
           ) : (
-            <MagnifyingGlassIcon className="w-6 h-6" />
+            <MagnifyingGlassIcon className="h-5 w-5" />
           )}
         </button>
       </div>
 
-      {/* Search Results Dropdown */}
-      {results.length > 0 && (
-        <div className="absolute w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-          <ul className="py-2">
-            {results.map((result, index) => (
-              <li
-                key={index}
-                className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
-                onClick={() => handleResultClick(result)}
-              >
-                <div className="flex justify-between items-center">
-                  <span>{result.label}</span>
-                  <span className="text-sm text-gray-500">{result.category}</span>
-                </div>
-                <div className="text-sm text-gray-500">
-                  {result.siren} - {result.codepostal}
-                  {result.age_naiss && ` - ${result.age_naiss} ans`}
-                </div>
-              </li>
-            ))}
-          </ul>
+      {/* Search Results */}
+      {showResults && (query.length > 0 || results.length > 0) && (
+        <div className="absolute w-full mt-2 bg-white rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+          {isLoading ? (
+            <div className="p-4 text-gray-500 text-center">
+              Recherche en cours...
+            </div>
+          ) : results.length > 0 ? (
+            <ul className="py-2">
+              {results.map((result, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleResultClick(result)}
+                >
+                  <div className="flex justify-between items-center">
+                    <span>{result.label}</span>
+                    <span className="text-sm text-gray-500">{result.category}</span>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {result.siren} - {result.codepostal}
+                    {result.age_naiss && ` - ${result.age_naiss} ans`}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : query.length > 0 ? (
+            <div className="p-4 text-gray-500 text-center">
+              Aucun résultat trouvé
+            </div>
+          ) : null}
         </div>
       )}
     </form>

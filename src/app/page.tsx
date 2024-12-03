@@ -34,7 +34,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-[aliceblue] pt-40 pb-20 px-8">
+      <section className="bg-[aliceblue] pt-40 pb-32 px-8 relative">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -54,22 +54,24 @@ export default async function Home() {
                 width={500}
                 height={400}
                 priority
-                className="w-full max-w-[12rem]"
+                className="w-full max-w-[12rem] hidden lg:block"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Search Section - Positioned absolutely */}
+        <div className="absolute left-0 right-0 bottom-0 translate-y-1/2">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <SearchBar />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Search Section */}
-      <div className="container mx-auto px-4 -mt-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
-          <SearchBar />
-        </div>
-      </div>
-
-      {/* Trust Section */}
-      <section className="py-20">
+      {/* Trust Section - Added top padding to account for search bar */}
+      <section className="py-32 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
