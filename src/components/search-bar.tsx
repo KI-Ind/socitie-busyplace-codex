@@ -82,7 +82,18 @@ export function SearchBar() {
   const handleResultClick = (result: any) => {
     // Extract SIREN from the result
     const siren = result.siren.replace(/\s/g, '').substring(0, 9);
-    router.push(`/company/${siren}`);
+    
+    // Get company name from the label and format it for URL
+    const companyName = result.label
+      .split('-')[0] // Get the part before first dash
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    
+    router.push(`/${companyName}/${siren}`);
   };
 
   // Clear timeout on unmount
