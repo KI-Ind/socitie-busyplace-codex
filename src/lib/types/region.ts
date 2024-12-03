@@ -1,18 +1,18 @@
 export interface Region {
-  id: number;
-  code: string;
   name: string;
-  slug: string;
+  count?: string;
+  companiesCount?: number;
+  slug?: string;
 }
 
 export interface Department {
-  id: number;
   code: string;
   name: string;
   region: string;
   dpt_slug: string;
   region_slug: string;
   region_code: string;
+  companiesCount?: number;
 }
 
 export interface HomeData {

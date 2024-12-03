@@ -109,3 +109,20 @@ export default function AnnuairesEntreprises() {
     </div>
   );
 }
+                      className="justify-start h-auto py-3 text-left hover:bg-gray-50"
+                      asChild
+                    >
+                      <a href={`/activites/${activity.key}`}>
+                        {activity.name}
+                      </a>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

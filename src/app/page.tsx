@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
 import { AnimatedCard } from "@/components/animated-card";
+import { DepartmentsSection } from "@/components/departments-section";
 import { getHomeData } from '@/lib/api/regions';
 import { HomeData } from '@/lib/types/region';
 
@@ -18,7 +19,16 @@ export default async function Home() {
       { name: "Nouvelle-Aquitaine", count: "123,456" },
       { name: "Hauts-de-France", count: "112,345" },
     ];
-    departments = data.departments || [];
+    // Serialize MongoDB data
+    departments = data.departments ? data.departments.map(dept => ({
+      code: dept.code,
+      name: dept.name,
+      region: dept.region,
+      dpt_slug: dept.dpt_slug,
+      region_slug: dept.region_slug,
+      region_code: dept.region_code,
+      companiesCount: dept.companiesCount
+    })) : [];
   } catch (error) {
     console.error('Error loading home data:', error);
     regions = [
@@ -70,7 +80,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Trust Section - Added top padding to account for search bar */}
+      {/* Trust Section */}
       <section className="py-32 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -142,38 +152,20 @@ export default async function Home() {
                 index={index}
                 title={region.name}
                 subtitle={`${region.count || (region.companiesCount?.toLocaleString('fr-FR') || '0')} entreprises`}
-                href={`/annuaires-entreprises/${region.slug || region.name.toLowerCase().replace(/ /g, '-')}`}
+                href={`/annuaires-entreprises/${region.slug || region.name.toLowerCase().replace(/[\s+]/g, '-')}`}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Popular Companies Section */}
-      <section className="bg-white p-8 sm:p-16 mb-10">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-[#27295b] mb-8 text-center">
-            Annuaire des sociétés dans les département de France
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {departments.map((department, index) => (
-              <AnimatedCard
-                key={department.code}
-                index={index}
-                title={department.name}
-                code={department.code}
-                subtitle={`${department.companiesCount?.toLocaleString('fr-FR') || '0'} entreprises`}
-                href={`/annuaires-entreprises/${department.region_slug || 'region'}/${department.dpt_slug || department.code}`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Departments Section */}
+      <DepartmentsSection departments={departments} />
 
       {/* Technologies Section */}
       <section className="services-bg" id="newDiv">
         <div className="services-bg-img">
-          <div className="container mx-auto px-4 py-16">
+          <div className="container mx-auto px-8 sm:px-16 py-16">
             <header className="section-header mb-12">
               <h3 className="text-3xl font-bold text-white text-center">Nos technologies</h3>
             </header>
@@ -201,23 +193,19 @@ export default async function Home() {
                   description: "Nous déployons des technologies d'intelligence artificielle permettant à nos algorithmes d'évoluer grâce au machine learning. Ces technologies nous permettent de vous proposer des informations beaucoup plus pertinentes et de prendre de l'avance sur nos concurrents. Contrôle Maboite utilise des technologies de pointe pour vous proposer les meilleures prestations."
                 }
               ].map((tech, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center wow bounceInUp">
-                  <div className="md:col-span-4 flex justify-center">
+                <div key={index} className="flex flex-col md:flex-row items-start gap-6">
+                  <div className="flex-shrink-0">
                     <Image
                       src={tech.icon}
                       alt={tech.title}
-                      width={100}
-                      height={100}
-                      className="img-fluid img-bg-g"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16"
                     />
                   </div>
-                  <div className="md:col-span-8">
-                    <h5 className="text-xl font-bold text-white mb-4">
-                      <a href="#" className="hover:text-gray-200">{tech.title}</a>
-                    </h5>
-                    <p className="text-white/90 text-justify">
-                      {tech.description}
-                    </p>
+                  <div>
+                    <h4 className="text-xl font-semibold text-white mb-4">{tech.title}</h4>
+                    <p className="text-gray-300">{tech.description}</p>
                   </div>
                 </div>
               ))}
