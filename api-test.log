@@ -1,20 +1,20 @@
 API Route loaded
 Environment check: INSEE_CONSUMER_KEY=true, INSEE_SECRET_KEY=true
-API called at 2024-12-05T06:27:09.592Z
+API called at 2024-12-05T20:25:40.314Z
 Runtime env check: INSEE_CONSUMER_KEY=true, INSEE_SECRET_KEY=true
 Keyword: kifwat
 About to call searchCompanies
-2024-12-05T06:27:09.595Z - SEARCH - === SEARCH COMPANIES FUNCTION ENTRY ===
-2024-12-05T06:27:09.595Z - SEARCH - Keyword: kifwat
-2024-12-05T06:27:09.596Z - SEARCH - Environment variables: INSEE_CONSUMER_KEY=true, INSEE_SECRET_KEY=true
-2024-12-05T06:27:09.599Z - SEARCH - Credentials created
-2024-12-05T06:27:09.599Z - SEARCH - Making token request...
-2024-12-05T06:27:10.434Z - SEARCH - Token response: status=200, statusText=OK
-2024-12-05T06:27:10.436Z - SEARCH - Token data: access_token=true, token_type=Bearer, expires_in=486549
-2024-12-05T06:27:10.437Z - SEARCH - Search request details: url=https://api.insee.fr/entreprises/sirene/V3.11/siret?q=raisonSociale%3A%22kifwat%22%20AND%20raisonSociale%3A%22%22%20AND%20raisonSociale%3A%22%22&nombre=1000, method=GET, headers={"Authorization":"Bearer bff4cda9-e50a-3874-9b08-4effef0f1846"}
-2024-12-05T06:27:11.210Z - SEARCH - Search response: status=200, statusText=
-2024-12-05T06:27:11.216Z - SEARCH - Raw INSEE response data received
-2024-12-05T06:27:11.216Z - SEARCH - Full INSEE API Response: {
+2024-12-05T20:25:40.318Z - SEARCH - === SEARCH COMPANIES FUNCTION ENTRY ===
+2024-12-05T20:25:40.318Z - SEARCH - Keyword: kifwat
+2024-12-05T20:25:40.321Z - SEARCH - Environment variables: INSEE_CONSUMER_KEY=true, INSEE_SECRET_KEY=true
+2024-12-05T20:25:40.326Z - SEARCH - Credentials created
+2024-12-05T20:25:40.327Z - SEARCH - Making token request...
+2024-12-05T20:25:41.063Z - SEARCH - Token response: status=200, statusText=OK
+2024-12-05T20:25:41.066Z - SEARCH - Token data: access_token=true, token_type=Bearer, expires_in=436238
+2024-12-05T20:25:41.068Z - SEARCH - Search request details: url=https://api.insee.fr/entreprises/sirene/V3.11/siret?q=raisonSociale%3A%22kifwat%22%20AND%20raisonSociale%3A%22%22%20AND%20raisonSociale%3A%22%22&nombre=1000, method=GET, headers={"Authorization":"Bearer bff4cda9-e50a-3874-9b08-4effef0f1846"}
+2024-12-05T20:25:41.863Z - SEARCH - Search response: status=200, statusText=
+2024-12-05T20:25:41.871Z - SEARCH - Raw INSEE response data received
+2024-12-05T20:25:41.871Z - SEARCH - Full INSEE API Response: {
   "header": {
     "statut": 200,
     "message": "OK",
@@ -244,5 +244,5 @@ About to call searchCompanies
     }
   ]
 }
-2024-12-05T06:27:11.219Z - SEARCH - Final processed results received
+2024-12-05T20:25:41.878Z - SEARCH - Final processed results received
 Results: [{"codepostal":"75015","age_naiss":"","siren":"84509835900019","label":"KIFWAT - 54 AVENUE DE LA MOTTE-PICQUET 75015 PARIS","category":"Sociétés"},{"codepostal":"75015","age_naiss":"","siren":"83018113700019","label":"GROUPE KIFWAT ASSURTECH - 54 AVENUE DE LA MOTTE-PICQUET 75015 PARIS","category":"Sociétés"}]
