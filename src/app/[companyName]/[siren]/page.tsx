@@ -9,7 +9,7 @@ interface CompanyDetailsProps {
   };
 }
 
-async function getCompanyData(siren: string) {
+async function getCompanyData(siren: string): Promise<CompanyData | null> {
   try {
     console.log('Starting getCompanyData with siren:', siren);
     
@@ -21,7 +21,8 @@ async function getCompanyData(siren: string) {
     const consumer_secret = process.env.INSEE_SECRET_KEY;
 
     if (!consumer_key || !consumer_secret) {
-      throw new Error('Missing INSEE credentials');
+      console.error('Missing INSEE credentials');
+      return null;
     }
 
     const auth = Buffer.from(`${consumer_key}:${consumer_secret}`).toString('base64');
@@ -36,7 +37,8 @@ async function getCompanyData(siren: string) {
     });
 
     if (!tokenResponse.ok) {
-      throw new Error('Failed to get INSEE token');
+      console.error('Failed to get INSEE token');
+      return null;
     }
 
     const tokenData = await tokenResponse.json();
@@ -54,22 +56,23 @@ async function getCompanyData(siren: string) {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch company data');
+      console.error('Failed to fetch company data');
+      return null;
     }
 
     return response.json() as Promise<CompanyData>;
   } catch (error) {
     console.error('Error in getCompanyData:', error);
-    throw error;
+    return null;
   }
 }
 
 export async function generateMetadata({ params }: CompanyDetailsProps): Promise<Metadata> {
   const { siren } = params;
-  
+
   try {
     const data = await getCompanyData(siren);
-    const headquarters = data.etablissements?.find(e => e.etablissementSiege);
+    const headquarters = data?.etablissements?.find(e => e.etablissementSiege);
 
     if (headquarters) {
       const companyName = headquarters.uniteLegale.denominationUniteLegale;
@@ -94,7 +97,15 @@ export async function generateMetadata({ params }: CompanyDetailsProps): Promise
 export default async function CompanyDetailsPage({ params }: CompanyDetailsProps) {
   const { siren } = params;
   const data = await getCompanyData(siren);
-  
+
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Impossible de charger les données de la société.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="pt-32 md:pt-36 px-8 md:px-16 lg:px-24 xl:px-32 pb-12">

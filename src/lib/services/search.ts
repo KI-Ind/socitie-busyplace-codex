@@ -75,7 +75,6 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
     }
 
     const tokenData = await tokenResponse.json();
-    });
 
     try {
       // Search INSEE data
@@ -125,14 +124,9 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
       
       const inseeResponse = await fetch(url, requestOptions);
 
-        status: inseeResponse.status,
-        statusText: inseeResponse.statusText,
-        headers: Object.fromEntries(inseeResponse.headers)
-      });
-
       // Handle 404 as a valid "no results" response
       if (inseeResponse.status === 404) {
-        return { etablissements: [] };
+        return [];
       }
 
       if (!inseeResponse.ok) {
@@ -176,7 +170,7 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
 
       return results;
     } catch (error) {
-      return { etablissements: [] };
+      return [];
     }
   } catch (error) {
     console.error('ERROR in searchCompanies:', {
