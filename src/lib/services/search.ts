@@ -126,7 +126,7 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
 
       // Handle 404 as a valid "no results" response
       if (inseeResponse.status === 404) {
-        return { etablissements: [] };
+        return [];
       }
 
       if (!inseeResponse.ok) {
@@ -170,7 +170,7 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
 
       return results;
     } catch (error) {
-      return { etablissements: [] };
+      return [];
     }
   } catch (error) {
     console.error('ERROR in searchCompanies:', {
