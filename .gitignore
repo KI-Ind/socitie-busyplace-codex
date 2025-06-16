@@ -28,6 +28,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+api-test.log
+public/regentreprises.txt
+.cache/
 
 # env files (can opt-in for committing if needed)
 .env*

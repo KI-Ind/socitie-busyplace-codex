@@ -1,10 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-const TOKEN_FILE = path.join(process.cwd(), 'public', 'regentreprises.txt');
+const TOKEN_DIR = path.join(process.cwd(), '.cache');
+const TOKEN_FILE = path.join(TOKEN_DIR, 'regentreprises.txt');
 
 export async function getRegistreToken() {
   try {
+    // Ensure the cache directory exists
+    if (!fs.existsSync(TOKEN_DIR)) {
+      fs.mkdirSync(TOKEN_DIR, { recursive: true });
+    }
     // Check if token file exists and is not expired (30 minutes)
     if (fs.existsSync(TOKEN_FILE)) {
       const stats = fs.statSync(TOKEN_FILE);
@@ -30,6 +35,9 @@ export async function getRegistreToken() {
     }
 
     const data = await response.json();
+    if (!fs.existsSync(TOKEN_DIR)) {
+      fs.mkdirSync(TOKEN_DIR, { recursive: true });
+    }
     fs.writeFileSync(TOKEN_FILE, data.token);
     return data.token;
   } catch (error) {

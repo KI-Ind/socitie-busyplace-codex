@@ -1,14 +1,3 @@
-console.log('=== SEARCH MODULE INITIALIZATION ===');
-console.log('Search module is being loaded');
-
-import fs from 'fs';
-
-// Helper function to log to file
-const log = (msg: string) => {
-  fs.appendFileSync('api-test.log', `${new Date().toISOString()} - SEARCH - ${msg}\n`);
-};
-
-console.log('Search module loaded');
 
 interface INSEEResult {
   etablissements: Array<{
@@ -45,15 +34,8 @@ interface INPIResult {
 
 // Make sure function is properly exported
 export async function searchCompanies(keyword: string): Promise<any[]> {
-  log('=== SEARCH COMPANIES FUNCTION ENTRY ===');
-  log(`Keyword: ${keyword}`);
   
-  console.log('=== SEARCH COMPANIES FUNCTION ENTRY ===');
-  console.log('Function is being executed with keyword:', keyword);
   
-  console.log('searchCompanies function called');
-  console.log('=== SEARCH FUNCTION DEBUG ===');
-  console.log('1. Function called with keyword:', keyword);
 
   const results: any[] = [];
   
@@ -62,15 +44,7 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
     const consumerKey = process.env.INSEE_CONSUMER_KEY;
     const secretKey = process.env.INSEE_SECRET_KEY;
 
-    log(`Environment variables: INSEE_CONSUMER_KEY=${!!consumerKey}, INSEE_SECRET_KEY=${!!secretKey}`);
-    console.log('2. Environment variables:', {
-      INSEE_CONSUMER_KEY: process.env.INSEE_CONSUMER_KEY ? 'set' : 'not set',
-      INSEE_SECRET_KEY: process.env.INSEE_SECRET_KEY ? 'set' : 'not set',
-      NODE_ENV: process.env.NODE_ENV
-    });
-
     if (!consumerKey || !secretKey) {
-      log('ERROR: INSEE credentials not found');
       console.error('INSEE credentials not found:', { 
         hasConsumerKey: !!consumerKey,
         hasSecretKey: !!secretKey
@@ -80,11 +54,7 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
 
     // Create base64 encoded credentials
     const credentials = Buffer.from(`${consumerKey}:${secretKey}`).toString('base64');
-    log('Credentials created');
-    console.log('3. Credentials created');
 
-    log('Making token request...');
-    console.log('4. Making token request...');
     const tokenResponse = await fetch('https://api.insee.fr/token', {
       method: 'POST',
       headers: {
@@ -93,16 +63,9 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
       },
       body: 'grant_type=client_credentials'
     });
-    
-    log(`Token response: status=${tokenResponse.status}, statusText=${tokenResponse.statusText}`);
-    console.log('5. Token response:', {
-      status: tokenResponse.status,
-      statusText: tokenResponse.statusText
-    });
 
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
-      log(`Token request failed: ${errorText}`);
       console.error('Token request failed:', {
         status: tokenResponse.status,
         statusText: tokenResponse.statusText,
@@ -112,12 +75,6 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
     }
 
     const tokenData = await tokenResponse.json();
-    log(`Token data: access_token=${!!tokenData.access_token}, token_type=${tokenData.token_type}, expires_in=${tokenData.expires_in}`);
-    console.log('6. Token data:', {
-      hasAccessToken: !!tokenData.access_token,
-      tokenType: tokenData.token_type,
-      expiresIn: tokenData.expires_in,
-      accessTokenFirstChars: tokenData.access_token ? `${tokenData.access_token.substring(0, 10)}...` : null
     });
 
     try {
@@ -165,12 +122,9 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
         'Authorization': `Bearer ${tokenData.access_token}`
       };
 
-      log(`Search request details: url=${url}, method=${requestOptions.method}, headers=${JSON.stringify(requestOptions.headers)}`);
       
       const inseeResponse = await fetch(url, requestOptions);
 
-      log(`Search response: status=${inseeResponse.status}, statusText=${inseeResponse.statusText}`);
-      console.log('8. Search response:', {
         status: inseeResponse.status,
         statusText: inseeResponse.statusText,
         headers: Object.fromEntries(inseeResponse.headers)
@@ -178,20 +132,15 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
 
       // Handle 404 as a valid "no results" response
       if (inseeResponse.status === 404) {
-        log('No results found');
         return { etablissements: [] };
       }
 
       if (!inseeResponse.ok) {
         const errorText = await inseeResponse.text();
-        log(`Search request failed: ${errorText}`);
         throw new Error(`INSEE API request failed: ${inseeResponse.status} ${inseeResponse.statusText}`);
       }
 
       const inseeData: INSEEResult = await inseeResponse.json();
-      log('Raw INSEE response data received');
-      log(`Full INSEE API Response: ${JSON.stringify(inseeData, null, 2)}`);
-      console.log('9. Raw INSEE response data:', inseeData);
       
       // Process INSEE results
       const results = inseeData.etablissements
@@ -225,14 +174,11 @@ export async function searchCompanies(keyword: string): Promise<any[]> {
           };
         });
 
-      log('Final processed results received');
       return results;
     } catch (error) {
-      log(`ERROR in searchCompanies: ${error.message}`);
       return { etablissements: [] };
     }
   } catch (error) {
-    log(`ERROR in searchCompanies: ${error instanceof Error ? error.message : String(error)}`);
     console.error('ERROR in searchCompanies:', {
       error,
       message: error instanceof Error ? error.message : String(error),

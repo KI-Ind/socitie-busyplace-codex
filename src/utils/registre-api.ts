@@ -4,9 +4,14 @@ import path from 'path';
 async function getRegistreToken() {
     const username = process.env.regent_login;
     const password = process.env.regent_password;
-    const tokenPath = path.join(process.cwd(), 'public', 'regentreprises.txt');
+    const tokenDir = path.join(process.cwd(), '.cache');
+    const tokenPath = path.join(tokenDir, 'regentreprises.txt');
 
     try {
+        // Ensure the cache directory exists
+        if (!fs.existsSync(tokenDir)) {
+            fs.mkdirSync(tokenDir, { recursive: true });
+        }
         // Check if token file exists and is not expired (30 minutes)
         if (fs.existsSync(tokenPath)) {
             const stats = fs.statSync(tokenPath);
@@ -33,8 +38,11 @@ async function getRegistreToken() {
         }
 
         const data = await response.json();
-        
+
         // Save token to file
+        if (!fs.existsSync(tokenDir)) {
+            fs.mkdirSync(tokenDir, { recursive: true });
+        }
         fs.writeFileSync(tokenPath, data.token);
         
         return data.token;
