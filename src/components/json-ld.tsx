@@ -4,9 +4,10 @@ interface JsonLdProps {
   organizationData?: any;
   breadcrumbData?: any;
   localBusinessData?: any;
+  nonce?: string;
 }
 
-export function JsonLd({ organizationData, breadcrumbData, localBusinessData }: JsonLdProps) {
+export function JsonLd({ organizationData, breadcrumbData, localBusinessData, nonce }: JsonLdProps) {
   const baseOrganizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -73,6 +74,7 @@ export function JsonLd({ organizationData, breadcrumbData, localBusinessData }: 
   return (
     <>
       <script
+        nonce={nonce}
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationData || baseOrganizationData)
@@ -80,6 +82,7 @@ export function JsonLd({ organizationData, breadcrumbData, localBusinessData }: 
       />
       {breadcrumbData && (
         <script
+          nonce={nonce}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(breadcrumbData)
@@ -88,6 +91,7 @@ export function JsonLd({ organizationData, breadcrumbData, localBusinessData }: 
       )}
       {localBusinessData && (
         <script
+          nonce={nonce}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(localBusinessData || baseLocalBusinessData)

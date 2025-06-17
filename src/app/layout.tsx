@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer as LayoutFooter } from "@/components/layout/footer";
 import { JsonLd } from "@/components/json-ld";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const inter = Inter({
@@ -99,6 +100,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = headers().get('x-nonce') || undefined;
   return (
     <html lang="fr" dir="ltr">
       <head>
@@ -112,12 +114,13 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
-        <JsonLd />
+        <JsonLd nonce={nonce} />
         <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml" />
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
