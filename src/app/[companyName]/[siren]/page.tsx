@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Metadata, type PageProps } from 'next';
+import { Metadata } from 'next';
 import { CompanyData } from '@/types/company';
 import CompanyDetailsClient from '@/components/CompanyDetailsClient';
 
-interface CompanyDetailsProps extends PageProps {
+interface CompanyDetailsProps {
   params: {
     siren: string;
     companyName: string;
