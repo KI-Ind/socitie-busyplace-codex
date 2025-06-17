@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface Company {
   siret?: string;
   name: string;

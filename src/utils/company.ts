@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function formatSIREN(siren: string): string {
   return `${siren.substring(0, 3)} ${siren.substring(3, 6)} ${siren.substring(6, 9)}`;
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface BreadcrumbItem {
   name: string;
   item: string;

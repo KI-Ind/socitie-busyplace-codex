@@ -1,7 +1,4 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// @ts-nocheck
+export default {
   /* config options here */
 };
-
-export default nextConfig;

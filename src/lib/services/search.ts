@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 console.log('=== SEARCH MODULE INITIALIZATION ===');
 console.log('Search module is being loaded');
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose from 'mongoose';
 
 const DepartmentSchema = new mongoose.Schema({

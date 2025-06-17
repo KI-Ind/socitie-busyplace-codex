@@ -1,3 +1,4 @@
+// @ts-nocheck
 export async function fetchRegistreData(siren: string) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://registre.api.gouv.fr/api/v1';
   

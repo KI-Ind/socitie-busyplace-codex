@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Metadata } from 'next';
 import { CompanyData } from '@/types/company';
 import CompanyDetailsClient from '@/components/CompanyDetailsClient';

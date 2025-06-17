@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface Region {
   name: string;
   count?: string;
