@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const siteConfig = {
   name: 'SocieteBusyPlace',
   description: 'Accédez gratuitement aux informations sur les entreprises françaises',

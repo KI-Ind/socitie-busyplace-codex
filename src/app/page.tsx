@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";

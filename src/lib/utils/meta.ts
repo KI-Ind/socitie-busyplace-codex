@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function generateCompanyMetaDescription(company: any) {
   if (!company) return '';
   

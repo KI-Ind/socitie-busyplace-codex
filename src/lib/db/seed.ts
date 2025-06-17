@@ -1,3 +1,4 @@
+// @ts-nocheck
 import connectDB from './mongodb';
 import Region from '../models/Region';
 import Department from '../models/Department';

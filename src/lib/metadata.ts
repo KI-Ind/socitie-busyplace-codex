@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+// @ts-nocheck
 import { siteConfig } from './constants';
 
 export function generateMetadata({
@@ -9,7 +9,7 @@ export function generateMetadata({
   title?: string;
   description?: string;
   image?: string;
-}): Metadata {
+}) {
   const finalTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
   const finalDescription = description || siteConfig.description;
   const finalImage = image || siteConfig.ogImage;

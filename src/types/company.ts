@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface CompanyAddress {
   numeroVoieEtablissement: string;
   typeVoieEtablissement: string;

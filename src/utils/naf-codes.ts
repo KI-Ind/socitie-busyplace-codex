@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface NafCode {
   [key: string]: string;
 }

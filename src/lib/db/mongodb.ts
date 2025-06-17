@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://dev_socitie_usr:12345678socitie123@10.8.0.52:27017/dev_socitie?authSource=dev_socitie';

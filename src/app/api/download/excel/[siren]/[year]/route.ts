@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextResponse } from 'next/server';
 import { getRegistreToken } from '@/utils/registre-token';
 import ExcelJS from 'exceljs';

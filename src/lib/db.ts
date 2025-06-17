@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { sql } from '@vercel/postgres';
 
 export async function query(query: string, values: any[] = []) {

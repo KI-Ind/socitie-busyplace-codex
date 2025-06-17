@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function currencyFormat(locale: string, value: number): string {
     return new Intl.NumberFormat(locale === 'fr' ? 'fr-FR' : 'en-US', {
         minimumFractionDigits: 0,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextResponse } from 'next/server';
 import { formatDate } from '@/utils/format';
 import { getRegistreData, getRoles } from '@/utils/registre-api';

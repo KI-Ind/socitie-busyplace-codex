@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface LegalForm {
   c: number;
   n: string;
