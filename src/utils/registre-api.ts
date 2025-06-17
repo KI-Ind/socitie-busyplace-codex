@@ -4,7 +4,15 @@ import path from 'path';
 async function getRegistreToken() {
     const username = process.env.regent_login;
     const password = process.env.regent_password;
-    const tokenPath = path.join(process.cwd(), 'public', 'regentreprises.txt');
+    const tokenDir = path.join(process.cwd(), 'tmp');
+    const tokenPath = path.join(tokenDir, 'regentreprises.txt');
+
+    try {
+        fs.mkdirSync(tokenDir, { recursive: true });
+    } catch (err) {
+        console.error('Error ensuring token directory exists:', err);
+        throw err;
+    }
 
     try {
         // Check if token file exists and is not expired (30 minutes)

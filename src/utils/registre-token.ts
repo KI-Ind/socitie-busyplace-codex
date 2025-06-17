@@ -1,10 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 
-const TOKEN_FILE = path.join(process.cwd(), 'public', 'regentreprises.txt');
+const TOKEN_DIR = path.join(process.cwd(), 'tmp');
+const TOKEN_FILE = path.join(TOKEN_DIR, 'regentreprises.txt');
 
 export async function getRegistreToken() {
   try {
+    try {
+      fs.mkdirSync(TOKEN_DIR, { recursive: true });
+    } catch (err) {
+      console.error('Error ensuring token directory exists:', err);
+      throw err;
+    }
+
     // Check if token file exists and is not expired (30 minutes)
     if (fs.existsSync(TOKEN_FILE)) {
       const stats = fs.statSync(TOKEN_FILE);
