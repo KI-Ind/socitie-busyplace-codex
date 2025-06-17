@@ -14,6 +14,14 @@ pnpm dev
 bun dev
 ```
 
+## Environment Variables
+
+The application expects a MongoDB connection string in the `MONGODB_URI` environment variable. Create a `.env.local` file and define your connection string:
+
+```bash
+MONGODB_URI=your_connection_string
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
