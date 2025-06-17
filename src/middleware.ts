@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { randomBytes } from 'crypto';
 
 export function middleware(request: NextRequest) {
   // Don't apply CSP to service worker
@@ -7,16 +8,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const nonce = randomBytes(16).toString('base64');
   const response = NextResponse.next();
   const headers = response.headers;
+  headers.set('X-Nonce', nonce);
 
   // Content Security Policy
   headers.set(
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      // Allow inline scripts and eval for development
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com blob: https://api.mapbox.com",
+      `script-src 'self' 'nonce-${nonce}' https://cdnjs.cloudflare.com blob: https://api.mapbox.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com",
       "img-src 'self' data: https: blob: https://*.mapbox.com https://api.mapbox.com",
       "font-src 'self' https://fonts.gstatic.com",
